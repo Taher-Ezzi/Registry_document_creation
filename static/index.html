@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REGISTRY ARCHITECT // विक्रय-पत्र स्वचालन एवं विलेख प्रणाली</title>
+    
+    <!-- Google Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Top Executive Header -->
+        <header class="top-header">
+            <div class="brand-section">
+                <div class="brand-badge-group">
+                    <span class="system-tag">MP LEGAL SUITE</span>
+                    <span class="version-pill">v3.2 PRO</span>
+                </div>
+                <h1 class="app-title">
+                    <span class="app-title-hindi">विक्रय-पत्र स्वचालन एवं विलेख प्रणाली</span>
+                </h1>
+                <p class="app-subtitle">Intelligent Zero-Assumption Deed Generator for Legal Registry Deeds in Madhya Pradesh</p>
+            </div>
+
+            <div class="header-status-panel">
+                <div class="status-pills">
+                    <span class="status-pill active"><span class="dot"></span> ENGINE ONLINE</span>
+                    <span class="status-pill"><span class="dot"></span> ZERO-ASSUMPTION DIMENSIONS</span>
+                    <span class="status-pill"><span class="dot"></span> MULTI-BUYER READY</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Quick 1-Click Preset Chips Bar -->
+        <nav class="presets-bar">
+            <span class="presets-label">⚡ QUICK PRESETS:</span>
+            <button type="button" class="preset-chip" id="preset-e9">
+                ✨ Plot E9 (Khushbu Yadav / 3 Kotak Payments)
+            </button>
+            <button type="button" class="preset-chip" id="preset-e8">
+                ✨ Plot E8 (Tanuj Parihar / 2 PNB Payments)
+            </button>
+            <button type="button" class="preset-chip" id="preset-l1">
+                ✨ Plot L1 (Sarika Sethi / 4 Axis Payments + TDS)
+            </button>
+            <button type="button" class="btn-reset-chip" id="btn-reset-all">
+                🔄 Clear All
+            </button>
+        </nav>
+
+        <!-- Stepper Navigation -->
+        <nav class="stepper-nav">
+            <div class="step-item active" id="step-nav-1">
+                <div class="step-icon-box">01</div>
+                <div class="step-text-group">
+                    <span class="step-small-label">STEP ONE</span>
+                    <span class="step-title">दस्तावेज़ अंतर्ग्रहण (Intake)</span>
+                </div>
+            </div>
+            <div class="step-item" id="step-nav-2">
+                <div class="step-icon-box">02</div>
+                <div class="step-text-group">
+                    <span class="step-small-label">STEP TWO</span>
+                    <span class="step-title">डेटा सत्यापन (Verification)</span>
+                </div>
+            </div>
+            <div class="step-item" id="step-nav-3">
+                <div class="step-icon-box">03</div>
+                <div class="step-text-group">
+                    <span class="step-small-label">STEP THREE</span>
+                    <span class="step-title">विलेख संकलन (Compilation)</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Workspace -->
+        <main style="display: flex; flex-direction: column; gap: 28px;">
+            <!-- Step 1: Document Intake -->
+            <section class="section-block" id="section-intake">
+                <div class="section-header">
+                    <div class="section-title-group">
+                        <span class="step-num-badge">01</span>
+                        <h2>दस्तावेज़ अपलोड एवं अंतर्ग्रहण (Document Intake)</h2>
+                    </div>
+                </div>
+                <p class="section-lead">Upload your Word deed template, Excel payment sheet, single or multiple KYC PDFs (scanned or digital), and plot diagram PNG. Dimensions remain blank unless a diagram is uploaded.</p>
+
+                <div class="dropzone-grid">
+                    <!-- Word Template -->
+                    <div class="dropzone" id="dropzone-template">
+                        <input type="file" id="file-template" accept=".docx" class="file-input">
+                        <span class="dropzone-icon">📄</span>
+                        <h4 class="dropzone-title">Word Deed Template</h4>
+                        <p class="dropzone-hint" id="hint-template">Drag & drop or select .docx</p>
+                        <button type="button" class="btn-file-select">Select File</button>
+                    </div>
+
+                    <!-- Excel Sheet -->
+                    <div class="dropzone" id="dropzone-excel">
+                        <input type="file" id="file-excel" accept=".xlsx,.xls" class="file-input">
+                        <span class="dropzone-icon">📊</span>
+                        <h4 class="dropzone-title">Excel Request Sheet</h4>
+                        <p class="dropzone-hint" id="hint-excel">Payment & Applicants Details (.xlsx)</p>
+                        <button type="button" class="btn-file-select">Select File</button>
+                    </div>
+
+                    <!-- KYC PDFs -->
+                    <div class="dropzone" id="dropzone-kyc">
+                        <input type="file" id="file-kyc" accept=".pdf" multiple class="file-input">
+                        <span class="dropzone-icon">🪪</span>
+                        <h4 class="dropzone-title">Buyer KYC PDFs</h4>
+                        <p class="dropzone-hint" id="hint-kyc">Single or Multiple PDFs (Aadhaar/PAN)</p>
+                        <button type="button" class="btn-file-select">Select Files</button>
+                    </div>
+
+                    <!-- Plot Diagram -->
+                    <div class="dropzone" id="dropzone-png">
+                        <input type="file" id="file-png" accept=".png,.jpg,.jpeg" class="file-input">
+                        <span class="dropzone-icon">📐</span>
+                        <h4 class="dropzone-title">Plot Diagram</h4>
+                        <p class="dropzone-hint" id="hint-png">Diagram Takes Absolute Precedence</p>
+                        <button type="button" class="btn-file-select">Select Image</button>
+                    </div>
+                </div>
+
+                <div class="control-bar">
+                    <button type="button" id="btn-extract" class="btn-primary">
+                        ⚡ Auto-Extract All Data
+                    </button>
+                    <button type="button" id="btn-load-defaults" class="btn-secondary">
+                        📂 Scan Workspace Files
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 2: Verification Panel & Live Inspector Layout -->
+            <section class="section-block" id="review-section" style="display: none;">
+                <div class="section-header">
+                    <div class="section-title-group">
+                        <span class="step-num-badge">02</span>
+                        <h2>डेटा सत्यापन एवं सम्पादन (Data Verification & Live Preview)</h2>
+                    </div>
+                </div>
+                <p class="section-lead">Extracted data from your uploaded files. All fields are dynamically editable, and update the live deed preview in real-time.</p>
+
+                <div class="review-layout">
+                    <!-- Left: Form Controls -->
+                    <div class="review-grid">
+                        <!-- Dynamic Multi-Buyer Card -->
+                        <div class="review-card">
+                            <div class="card-title-bar">
+                                <h3>👥 क्रेता एवं सह-क्रेता विवरण (Buyers & Co-Applicants)</h3>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <span class="badge-pill" id="badge-buyer-count">1 Buyer</span>
+                                    <button type="button" id="btn-add-buyer-top" class="btn-secondary" style="padding: 4px 12px; font-size: 11px;">+ Add Co-Buyer</button>
+                                </div>
+                            </div>
+                            
+                            <div id="buyers-container">
+                                <!-- Dynamic Buyer Blocks Populated Here -->
+                            </div>
+
+                            <div class="add-buyer-action-bar">
+                                <button type="button" id="btn-add-buyer-bottom" class="btn-add-buyer-large">
+                                    ➕ Add Another Buyer / Co-Applicant (नया क्रेता / सह-क्रेता जोड़ें)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Plot Dimensions & Value -->
+                        <div class="review-card">
+                            <div class="card-title-bar">
+                                <h3>📐 भूखण्ड माप एवं मूल्य (Plot Measurements & Value)</h3>
+                                <span class="badge-pill" id="badge-colony-name">एमराल्ड आश्रय</span>
+                            </div>
+                            <div class="field-grid">
+                                <div class="field-group">
+                                    <label for="input-plot-no">भूखण्ड क्रमांक (Plot No)</label>
+                                    <input type="text" id="input-plot-no" value="" placeholder="e.g. E9">
+                                </div>
+                                <div class="field-group">
+                                    <label for="input-plot-hindi">हिन्दी में (In Hindi)</label>
+                                    <input type="text" id="input-plot-hindi" value="" placeholder="e.g. ई-नौ">
+                                </div>
+                                <div class="field-group">
+                                    <label for="input-width">चौड़ाई (Width - Mtr)</label>
+                                    <input type="text" id="input-width" value="" placeholder="Left blank if no diagram">
+                                </div>
+                                <div class="field-group">
+                                    <label for="input-length">लम्बाई (Length - Mtr)</label>
+                                    <input type="text" id="input-length" value="" placeholder="Left blank if no diagram">
+                                </div>
+                            </div>
+                            <div class="field-grid">
+                                <div class="field-group">
+                                    <label for="input-sqm">क्षेत्रफल (Area - Sq. Mtr)</label>
+                                    <input type="text" id="input-sqm" value="" placeholder="39.67">
+                                </div>
+                                <div class="field-group">
+                                    <label for="input-sqft">क्षेत्रफल (Area - Sq. Ft)</label>
+                                    <input type="text" id="input-sqft" value="" placeholder="427">
+                                </div>
+                                <div class="field-group full-width">
+                                    <label for="input-allotment">कुल विक्रय मूल्य (Allotment Value ₹)</label>
+                                    <input type="text" id="input-allotment" value="" placeholder="730597">
+                                </div>
+                            </div>
+                            <div class="field-group full-width">
+                                <label>अक्षरी रुपये (Legal Hindi Words)</label>
+                                <div class="hindi-display-box" id="preview-hindi-amount"></div>
+                            </div>
+                        </div>
+
+                        <!-- Boundaries Card -->
+                        <div class="review-card">
+                            <div class="card-title-bar">
+                                <h3>🧭 चतु:सीमा विवरण (Four Boundaries - from Excel)</h3>
+                                <span class="badge-pill">Hindi Translated</span>
+                            </div>
+                            <div class="field-grid">
+                                <div class="field-group">
+                                    <label for="input-east">पूर्व में (East)</label>
+                                    <input type="text" id="input-east" value="">
+                                </div>
+                                <div class="field-group">
+                                    <label for="input-west">पश्चिम में (West)</label>
+                                    <input type="text" id="input-west" value="">
+                                </div>
+                            </div>
+                            <div class="field-grid">
+                                <div class="field-group">
+                                    <label for="input-north">उत्तर में (North)</label>
+                                    <input type="text" id="input-north" value="">
+                                </div>
+                                <div class="field-group">
+                                    <label for="input-south">दक्षिण में (South)</label>
+                                    <input type="text" id="input-south" value="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payments Schedule Card -->
+                        <div class="review-card">
+                            <div class="card-title-bar">
+                                <h3>💳 भुगतान विवरण अनुसूची (Payment Details from Excel)</h3>
+                                <span class="badge-pill" id="badge-payment-count">0 Payments</span>
+                            </div>
+                            <div class="table-container">
+                                <table class="mono-table" id="payments-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Amount (₹)</th>
+                                            <th>Bank Name (Hindi)</th>
+                                            <th>Date (दिनांक)</th>
+                                            <th>Mode</th>
+                                            <th>Reference / UTR No.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="payments-tbody">
+                                        <!-- Populated dynamically from Excel -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Deed Inspector Sidebar -->
+                    <aside class="live-inspector-pane">
+                        <div class="inspector-header">
+                            <h4>🔍 विलेख लाइव पूर्वावलोकन (Live Deed Clauses)</h4>
+                            <span class="badge-pill">Syncing Live</span>
+                        </div>
+
+                        <!-- Banner Preview -->
+                        <div class="clause-snippet">
+                            <span class="clause-label">1. TOP BANNER HEADER</span>
+                            <p class="clause-body" id="preview-banner-text">भूखण्ड क्रमांक ..., एमराल्ड आश्रय, ग्राम-सोनवाय, तहसील-राऊ, ज़िला-इन्दौर</p>
+                        </div>
+
+                        <!-- Preamble Price Preview -->
+                        <div class="clause-snippet">
+                            <span class="clause-label">2. PREAMBLE CLAUSE & PRICE</span>
+                            <p class="clause-body" id="preview-preamble-text">...जिसका विक्रय व्यवहार मूल्य रुपये ... अक्षरी रुपये ... मात्र है, का विक्रय-पत्र</p>
+                        </div>
+
+                        <!-- 2-Column Boundary Preview -->
+                        <div class="clause-snippet">
+                            <span class="clause-label">3. 2-COLUMN BOUNDARY & SIZES</span>
+                            <p class="clause-body" id="preview-boundary-text">पूर्व में ... | पश्चिम में ... | उत्तर में ... | दक्षिण में ...</p>
+                        </div>
+
+                        <!-- Closing Price Clause -->
+                        <div class="clause-snippet">
+                            <span class="clause-label">4. CLOSING DELIVERY CLAUSE</span>
+                            <p class="clause-body" id="preview-closing-text">...उक्त विक्रय मूल्य रुपये ... प्राप्त करने के उपरान्त विक्रय कर दिया है...</p>
+                        </div>
+                    </aside>
+                </div>
+
+                <!-- Step 3: Compilation Action -->
+                <div class="compilation-area">
+                    <button type="button" id="btn-generate" class="btn-primary" style="font-size: 15px; padding: 15px 36px;">
+                        🚀 Compile & Generate Legal Deed (.docx)
+                    </button>
+
+                    <div class="download-banner" id="download-card" style="display: none;">
+                        <div class="download-details">
+                            <h4>✓ विलेख सफलतापूर्वक तैयार हो गया है (Registry Deed Ready)</h4>
+                            <p>Compiled with 100% precision from your Excel, KYC, and template files.</p>
+                        </div>
+                        <a id="btn-download" href="#" class="btn-download-final" download>
+                            ⬇ Download Word Deed (.docx)
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

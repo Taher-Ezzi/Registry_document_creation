@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*$py.class
+~$*.docx
+~$*.xlsx
+uploads/*
+!uploads/.gitkeep
+outputs/*
+!outputs/.gitkeep
+scratch_test_output.docx
+scratch/
+.env
+.DS_Store
+Thumbs.db
