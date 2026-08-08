@@ -64,7 +64,7 @@ function showToast(message, type = 'info') {
     if (!container) return;
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    toast.innerHTML = `<span>${type === 'success' ? '✓' : '⚡'}</span> ${message}`;
+    toast.textContent = message;
     container.appendChild(toast);
     setTimeout(() => {
         toast.style.opacity = '0';
@@ -178,18 +178,18 @@ function getTodayHindiDate() {
 
 // Live Real-Time Deed Inspector Sync
 function updateLiveInspector() {
-    let plotNo = document.getElementById('input-plot-no').value || 'E9';
-    plotNo = plotNo.replace(/\s*\([^)]*\)/g, '').trim();
-    const plotNoHindi = document.getElementById('input-plot-hindi').value || 'ई-नौ';
-    const colony = (extractedData && extractedData.colony_name) ? extractedData.colony_name : 'एमराल्ड आश्रय';
+    let rawPlot = document.getElementById('input-plot-no').value || 'E9';
+    let plotNo = rawPlot.replace('>', '').replace('<', '').replace(/\s*\([^)]*\)/g, '').trim();
+    const plotNoHindi = (document.getElementById('input-plot-hindi').value || 'ई-नौ').replace('>', '').replace('<', '');
+    const colony = ((extractedData && extractedData.colony_name) ? extractedData.colony_name : 'एमराल्ड आश्रय').replace('>', '').replace('<', '');
     const allotment = document.getElementById('input-allotment').value;
     const formattedPrice = formatIndianCurrency(allotment);
     const wordsPrice = allotment ? numberToHindiWords(allotment) : 'सात लाख तीस हज़ार पाँच सौ संतान्वे मात्र';
 
-    const east = document.getElementById('input-east').value || 'भूखण्ड क्रमांक L1, एमराल्ड आश्रय';
-    const west = document.getElementById('input-west').value || 'भूखण्ड क्रमांक ई-8, एमराल्ड आश्रय';
-    const north = document.getElementById('input-north').value || 'भूखण्ड क्रमांक 85 एवं 86, एमराल्ड आश्रय';
-    const south = document.getElementById('input-south').value || '9.00 मीटर चौड़ी सड़क';
+    const east = (document.getElementById('input-east').value || 'भूखण्ड क्रमांक L1, एमराल्ड आश्रय').replace('>', '').replace('<', '');
+    const west = (document.getElementById('input-west').value || 'भूखण्ड क्रमांक ई-8, एमराल्ड आश्रय').replace('>', '').replace('<', '');
+    const north = (document.getElementById('input-north').value || 'भूखण्ड क्रमांक 85 एवं 86, एमराल्ड आश्रय').replace('>', '').replace('<', '');
+    const south = (document.getElementById('input-south').value || '9.00 मीटर चौड़ी सड़क').replace('>', '').replace('<', '');
 
     // 1. Top Banner
     const elBanner = document.getElementById('preview-banner-text');
@@ -216,119 +216,7 @@ function updateLiveInspector() {
     }
 }
 
-// Preset Handlers for 1-Click Verification
-const PRESETS = {
-    e9: {
-        colony_name: 'एमराल्ड आश्रय',
-        plot_data: { plot_no: 'E9', plot_no_hindi: 'ई-नौ', width: '', length: '', area_sqm: 39.67, area_sqft: 427 },
-        allotment_val: 730597,
-        execution_date: getTodayHindiDate(),
-        boundaries: {
-            east: 'भूखण्ड क्रमांक L1, एमराल्ड आश्रय',
-            west: 'भूखण्ड क्रमांक ई-8, एमराल्ड आश्रय',
-            north: 'भूखण्ड क्रमांक 85 एवं 86, एमराल्ड आश्रय',
-            south: '9.00 मीटर चौड़ी सड़क'
-        },
-        kyc_data: {
-            buyers: [{
-                name: 'श्रीमती खुशबू यादव',
-                relation_title: 'पति श्री',
-                relation_name: 'पवन यादव',
-                pan_no: 'LUKPK3635A',
-                aadhar_no: '9913 9334 4052',
-                address: 'मकान नं. 1737, द्वारकापुरी, फूटी कोठी रोड, सुदामा नगर, इंदौर, मध्य प्रदेश - 452009'
-            }]
-        },
-        payments: [
-            { s_no: 1, amount: 200000, bank_hindi: 'कोटक महिन्द्रा बैंक', date_hindi: '30 जुलाई, 2026', mode: 'Online', ref_no: 'KKBKH26211830056', is_utr: false },
-            { s_no: 2, amount: 500000, bank_hindi: 'कोटक महिन्द्रा बैंक', date_hindi: '01 अगस्त, 2026', mode: 'Online', ref_no: 'KKBKH26213830998', is_utr: false },
-            { s_no: 3, amount: 30597, bank_hindi: 'कोटक महिन्द्रा बैंक', date_hindi: '04 अगस्त, 2026', mode: 'Online', ref_no: 'KKBKH26216629311', is_utr: false }
-        ],
-        tds_info: null
-    },
-    e8: {
-        colony_name: 'एमराल्ड आश्रय',
-        plot_data: { plot_no: 'E8', plot_no_hindi: 'ई-आठ', width: '', length: '', area_sqm: 39.67, area_sqft: 427 },
-        allotment_val: 750000,
-        execution_date: getTodayHindiDate(),
-        boundaries: {
-            east: 'भूखण्ड क्रमांक ई-9, एमराल्ड आश्रय',
-            west: 'भूखण्ड क्रमांक ई-7, एमराल्ड आश्रय',
-            north: 'भूखण्ड क्रमांक 85, एमराल्ड आश्रय',
-            south: '9.00 मीटर चौड़ी सड़क'
-        },
-        kyc_data: {
-            buyers: [{
-                name: 'श्री तनुज परिहार',
-                relation_title: 'पिता श्री',
-                relation_name: 'राजू परिहार',
-                pan_no: 'EGGPP7796Q',
-                aadhar_no: '3544 3057 7863',
-                address: 'मकान नं. 497-ऋषी पैलेस, कॉलोनी, इंदौर, मध्य प्रदेश - 452009'
-            }]
-        },
-        payments: [
-            { s_no: 1, amount: 375000, bank_hindi: 'पंजाब नेशनल बैंक', date_hindi: '15 जुलाई, 2026', mode: 'RTGS', ref_no: 'PUNBH26201994821', is_utr: true },
-            { s_no: 2, amount: 375000, bank_hindi: 'पंजाब नेशनल बैंक', date_hindi: '22 जुलाई, 2026', mode: 'RTGS', ref_no: 'PUNBH26208492019', is_utr: true }
-        ],
-        tds_info: null
-    },
-    l1: {
-        colony_name: 'एमराल्ड गेटवे',
-        plot_data: { plot_no: 'L-1', plot_no_hindi: 'एल-एक', width: 4.00, length: 9.61, area_sqm: 38.44, area_sqft: 414 },
-        allotment_val: 825000,
-        execution_date: getTodayHindiDate(),
-        boundaries: {
-            east: 'भूखण्ड क्रमांक 11, एमराल्ड गेटवे',
-            west: 'भूखण्ड क्रमांक L2, एमराल्ड गेटवे',
-            north: 'गार्डन, एमराल्ड गेटवे',
-            south: '12.00 मीटर चौड़ी सड़क'
-        },
-        kyc_data: {
-            buyers: [{
-                name: 'श्रीमती सरिका सेठी',
-                relation_title: 'पति श्री',
-                relation_name: 'अमित कुमार सेठी',
-                pan_no: 'BUFPS3575N',
-                aadhar_no: '2432 9492 5984',
-                address: 'मकान नम्बर-22, झंडा बाज़ार के पास, विनोभा भवन वार्ड-6, सिहोर, जबलपुर-483225 (म.प्र.)'
-            }]
-        },
-        payments: [
-            { s_no: 1, amount: 200000, bank_hindi: 'एक्सीस बैंक', date_hindi: '10 जून, 2026', mode: 'RTGS', ref_no: 'UTIBH26161839201', is_utr: true },
-            { s_no: 2, amount: 300000, bank_hindi: 'एक्सीस बैंक', date_hindi: '18 जून, 2026', mode: 'RTGS', ref_no: 'UTIBH26169948201', is_utr: true },
-            { s_no: 3, amount: 317750, bank_hindi: 'एक्सीस बैंक', date_hindi: '25 जून, 2026', mode: 'RTGS', ref_no: 'UTIBH26176629401', is_utr: true }
-        ],
-        tds_info: {
-            amount: 7250,
-            bank_hindi: 'एक्सीस बैंक',
-            date_hindi: '28 जून, 2026',
-            challan_no: '01568',
-            bsr_code: '6360014'
-        }
-    }
-};
 
-function loadPreset(key) {
-    const data = PRESETS[key];
-    if (!data) return;
-    extractedData = data;
-    const reviewSec = document.getElementById('review-section');
-    reviewSec.style.display = 'block';
-    populateReviewForm(data);
-    showToast(`Loaded preset: ${data.plot_data.plot_no} (${data.kyc_data.buyers[0].name})`, 'success');
-    
-    // Highlight active preset chip
-    document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
-    const activeChip = document.getElementById(`preset-${key}`);
-    if (activeChip) activeChip.classList.add('active');
-
-    // Stepper navigation update
-    document.getElementById('step-nav-1').classList.add('completed');
-    document.getElementById('step-nav-2').classList.add('active');
-
-    reviewSec.scrollIntoView({ behavior: 'smooth' });
-}
 
 function clearAllFields() {
     extractedData = null;
@@ -341,7 +229,6 @@ function clearAllFields() {
     document.getElementById('preview-hindi-amount').textContent = '';
     document.getElementById('download-card').style.display = 'none';
     document.getElementById('review-section').style.display = 'none';
-    document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
     showToast('All fields cleared and reset', 'info');
 }
 
@@ -356,9 +243,9 @@ document.addEventListener('DOMContentLoaded', () => {
             input.addEventListener('change', () => {
                 if (input.files && input.files.length > 0) {
                     if (input.files.length === 1) {
-                        hint.textContent = `✓ ${input.files[0].name}`;
+                        hint.textContent = `${input.files[0].name}`;
                     } else {
-                        hint.textContent = `✓ ${input.files.length} files selected`;
+                        hint.textContent = `${input.files.length} files selected`;
                     }
                     zone.classList.add('filled');
                     showToast(`Loaded ${input.files.length} file(s) into ${id.toUpperCase()}`, 'success');
@@ -366,12 +253,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-
-    // Preset Chips
-    document.getElementById('preset-e9').addEventListener('click', () => loadPreset('e9'));
-    document.getElementById('preset-e8').addEventListener('click', () => loadPreset('e8'));
-    document.getElementById('preset-l1').addEventListener('click', () => loadPreset('l1'));
-    document.getElementById('btn-reset-all').addEventListener('click', clearAllFields);
 
     // Live Price in Words
     const allotmentInput = document.getElementById('input-allotment');
@@ -390,9 +271,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Action Buttons
-    document.getElementById('btn-extract').addEventListener('click', () => performExtraction());
-    document.getElementById('btn-load-defaults').addEventListener('click', () => performExtraction(true));
-    document.getElementById('btn-generate').addEventListener('click', () => generateRegistryDoc());
+    const btnExtract = document.getElementById('btn-extract');
+    if (btnExtract) btnExtract.addEventListener('click', () => performExtraction());
+    
+    const btnGen = document.getElementById('btn-generate');
+    if (btnGen) btnGen.addEventListener('click', () => generateRegistryDoc());
     
     const btnAddTop = document.getElementById('btn-add-buyer-top');
     const btnAddBottom = document.getElementById('btn-add-buyer-bottom');
@@ -403,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function performExtraction(useDefaults = false) {
     const btn = document.getElementById('btn-extract');
     const oldText = btn.innerHTML;
-    btn.innerHTML = '⏳ Auto-Extracting Data...';
+    btn.innerHTML = 'Auto-Extracting Data...';
     btn.disabled = true;
 
     try {
@@ -433,7 +316,7 @@ async function performExtraction(useDefaults = false) {
         reviewSec.style.display = 'block';
         
         populateReviewForm(extractedData);
-        showToast('✓ Auto-extracted all plot, payment, and KYC details!', 'success');
+        showToast('Auto-extracted all plot, payment, and KYC details!', 'success');
 
         document.getElementById('step-nav-1').classList.add('completed');
         document.getElementById('step-nav-2').classList.add('active');
@@ -498,10 +381,11 @@ function populateReviewForm(data) {
 
     payments.forEach((p, idx) => {
         const tr = document.createElement('tr');
+        const paidByLabel = p.paid_by ? `<br><small style="color: var(--text-mid);">Paid By: ${p.paid_by}</small>` : '';
         tr.innerHTML = `
             <td>#${p.s_no || (idx + 1)}</td>
             <td><strong>₹${Number(p.amount).toLocaleString('en-IN')}/-</strong></td>
-            <td>${p.bank_hindi}</td>
+            <td>${p.bank_hindi}${paidByLabel}</td>
             <td>${p.date_hindi}</td>
             <td><span class="code-pill">${p.mode}</span></td>
             <td><code>${p.ref_no}</code></td>
@@ -529,7 +413,7 @@ function populateReviewForm(data) {
 async function generateRegistryDoc() {
     const btn = document.getElementById('btn-generate');
     const oldText = btn.innerHTML;
-    btn.innerHTML = '⚙️ Compiling Legal Word Deed (.docx)...';
+    btn.innerHTML = 'Compiling Legal Word Deed (.docx)...';
     btn.disabled = true;
 
     try {
@@ -582,7 +466,7 @@ async function generateRegistryDoc() {
             document.getElementById('step-nav-2').classList.add('completed');
             document.getElementById('step-nav-3').classList.add('active');
 
-            showToast('🎉 Legal Deed Word document compiled with 100% precision!', 'success');
+            showToast('Legal Deed Word document compiled with 100% precision!', 'success');
             card.scrollIntoView({ behavior: 'smooth' });
         }
     } catch (err) {
