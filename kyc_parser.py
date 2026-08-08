@@ -13,7 +13,7 @@ import fitz  # PyMuPDF
 def clean_ocr_text(t):
     if not t:
         return ""
-    t = t.replace('\u200c', '').replace('\u200d', '')
+    t = t.replace('\u200c', '').replace('\u200d', '').replace('>', '').replace('<', '')
     return " ".join(t.split())
 
 def extract_pan(text):
@@ -41,23 +41,34 @@ def parse_kyc_details(pdf_paths, excel_path=None):
     Intelligently extracts buyer details from one or multiple PDFs.
     Works for any user, any registry.
     """
-    if isinstance(pdf_paths, str):
+    if not pdf_paths:
+        pdf_paths = []
+    elif isinstance(pdf_paths, str):
         pdf_paths = [pdf_paths]
 
     buyers = []
 
-    # 1. Parse uploaded PDFs
+    # 1. Parse uploaded PDFs & Images (PNG, JPG, JPEG, WEBP)
     for p in pdf_paths:
         if not os.path.exists(p):
             continue
 
         raw_text = ""
-        try:
-            doc = fitz.open(p)
-            for page in doc:
-                raw_text += page.get_text() + "\n"
-        except Exception:
-            pass
+        ext = os.path.splitext(p)[1].lower()
+        if ext in ('.png', '.jpg', '.jpeg', '.webp', '.bmp'):
+            try:
+                import pytesseract
+                img = Image.open(p)
+                raw_text = pytesseract.image_to_string(img)
+            except Exception:
+                pass
+        else:
+            try:
+                doc = fitz.open(p)
+                for page in doc:
+                    raw_text += page.get_text() + "\n"
+            except Exception:
+                pass
 
         pan_no = extract_pan(raw_text)
         aadhar_no = extract_aadhar(raw_text)
