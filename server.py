@@ -27,9 +27,16 @@ from generate_registry import (
 from kyc_parser import parse_kyc_details
 from excel_boundary_parser import parse_boundaries_from_excel
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Support serverless / read-only filesystem environments (Vercel, AWS Lambda)
+if os.environ.get("VERCEL") or not os.access(BASE_DIR, os.W_OK):
+    TEMP_STORAGE = os.path.join("/tmp", "registry_data")
+else:
+    TEMP_STORAGE = BASE_DIR
+
 app = Flask(__name__, static_folder="static", static_url_path="")
-app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), "uploads")
-app.config['OUTPUT_FOLDER'] = os.path.join(os.path.dirname(__file__), "outputs")
+app.config['UPLOAD_FOLDER'] = os.path.join(TEMP_STORAGE, "uploads")
+app.config['OUTPUT_FOLDER'] = os.path.join(TEMP_STORAGE, "outputs")
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
