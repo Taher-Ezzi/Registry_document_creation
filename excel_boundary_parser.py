@@ -21,7 +21,7 @@ def translate_boundary_to_hindi(boundary_text, colony_name="एमराल्�
     if not boundary_text:
         return ""
         
-    b = str(boundary_text).strip()
+    b = str(boundary_text).strip().replace('>', '').replace('<', '').replace('\u200c', '').replace('\u200d', '')
     
     # Check for Road patterns (e.g. 9 MT. Wide Road, 9.00 Meter Road, 12M Road)
     road_match = re.search(r'(\d+(?:\.\d+)?)\s*(?:MT\.?|METER|MTR|M)?\s*(?:WIDE)?\s*ROAD', b, re.I)
