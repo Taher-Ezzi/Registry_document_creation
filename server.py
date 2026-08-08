@@ -113,8 +113,8 @@ def api_extract():
         plot_data = {
             'plot_no': clean_p or raw_p_no,
             'plot_no_hindi': p_hindi,
-            'width': '',
-            'length': '',
+            'width': excel_data.get('width', ''),
+            'length': excel_data.get('length', ''),
             'area_sqm': excel_data.get('area_sqm', ''),
             'area_sqft': excel_data.get('area_sqft', '')
         }
