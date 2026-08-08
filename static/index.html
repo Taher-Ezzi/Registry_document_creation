@@ -36,23 +36,6 @@
             </div>
         </header>
 
-        <!-- Quick 1-Click Preset Chips Bar -->
-        <nav class="presets-bar">
-            <span class="presets-label">⚡ QUICK PRESETS:</span>
-            <button type="button" class="preset-chip" id="preset-e9">
-                ✨ Plot E9 (Khushbu Yadav / 3 Kotak Payments)
-            </button>
-            <button type="button" class="preset-chip" id="preset-e8">
-                ✨ Plot E8 (Tanuj Parihar / 2 PNB Payments)
-            </button>
-            <button type="button" class="preset-chip" id="preset-l1">
-                ✨ Plot L1 (Sarika Sethi / 4 Axis Payments + TDS)
-            </button>
-            <button type="button" class="btn-reset-chip" id="btn-reset-all">
-                🔄 Clear All
-            </button>
-        </nav>
-
         <!-- Stepper Navigation -->
         <nav class="stepper-nav">
             <div class="step-item active" id="step-nav-1">
@@ -94,7 +77,7 @@
                     <!-- Word Template -->
                     <div class="dropzone" id="dropzone-template">
                         <input type="file" id="file-template" accept=".docx" class="file-input">
-                        <span class="dropzone-icon">📄</span>
+                        <span class="dropzone-icon">DOCX</span>
                         <h4 class="dropzone-title">Word Deed Template</h4>
                         <p class="dropzone-hint" id="hint-template">Drag & drop or select .docx</p>
                         <button type="button" class="btn-file-select">Select File</button>
@@ -103,25 +86,25 @@
                     <!-- Excel Sheet -->
                     <div class="dropzone" id="dropzone-excel">
                         <input type="file" id="file-excel" accept=".xlsx,.xls" class="file-input">
-                        <span class="dropzone-icon">📊</span>
+                        <span class="dropzone-icon">XLSX</span>
                         <h4 class="dropzone-title">Excel Request Sheet</h4>
                         <p class="dropzone-hint" id="hint-excel">Payment & Applicants Details (.xlsx)</p>
                         <button type="button" class="btn-file-select">Select File</button>
                     </div>
 
-                    <!-- KYC PDFs -->
+                    <!-- KYC PDFs & Images -->
                     <div class="dropzone" id="dropzone-kyc">
-                        <input type="file" id="file-kyc" accept=".pdf" multiple class="file-input">
-                        <span class="dropzone-icon">🪪</span>
-                        <h4 class="dropzone-title">Buyer KYC PDFs</h4>
-                        <p class="dropzone-hint" id="hint-kyc">Single or Multiple PDFs (Aadhaar/PAN)</p>
+                        <input type="file" id="file-kyc" accept=".pdf,.png,.jpg,.jpeg" multiple class="file-input">
+                        <span class="dropzone-icon">PDF/IMG</span>
+                        <h4 class="dropzone-title">Buyer KYC (PDF/Images)</h4>
+                        <p class="dropzone-hint" id="hint-kyc">PDFs or Images (Aadhaar/PAN)</p>
                         <button type="button" class="btn-file-select">Select Files</button>
                     </div>
 
                     <!-- Plot Diagram -->
                     <div class="dropzone" id="dropzone-png">
                         <input type="file" id="file-png" accept=".png,.jpg,.jpeg" class="file-input">
-                        <span class="dropzone-icon">📐</span>
+                        <span class="dropzone-icon">PNG</span>
                         <h4 class="dropzone-title">Plot Diagram</h4>
                         <p class="dropzone-hint" id="hint-png">Diagram Takes Absolute Precedence</p>
                         <button type="button" class="btn-file-select">Select Image</button>
@@ -130,10 +113,7 @@
 
                 <div class="control-bar">
                     <button type="button" id="btn-extract" class="btn-primary">
-                        ⚡ Auto-Extract All Data
-                    </button>
-                    <button type="button" id="btn-load-defaults" class="btn-secondary">
-                        📂 Scan Workspace Files
+                        Auto-Extract All Data
                     </button>
                 </div>
             </section>
@@ -154,7 +134,7 @@
                         <!-- Dynamic Multi-Buyer Card -->
                         <div class="review-card">
                             <div class="card-title-bar">
-                                <h3>👥 क्रेता एवं सह-क्रेता विवरण (Buyers & Co-Applicants)</h3>
+                                <h3>क्रेता एवं सह-क्रेता विवरण (Buyers & Co-Applicants)</h3>
                                 <div style="display: flex; gap: 8px; align-items: center;">
                                     <span class="badge-pill" id="badge-buyer-count">1 Buyer</span>
                                     <button type="button" id="btn-add-buyer-top" class="btn-secondary" style="padding: 4px 12px; font-size: 11px;">+ Add Co-Buyer</button>
@@ -167,7 +147,7 @@
 
                             <div class="add-buyer-action-bar">
                                 <button type="button" id="btn-add-buyer-bottom" class="btn-add-buyer-large">
-                                    ➕ Add Another Buyer / Co-Applicant (नया क्रेता / सह-क्रेता जोड़ें)
+                                    + Add Another Buyer / Co-Applicant (नया क्रेता / सह-क्रेता जोड़ें)
                                 </button>
                             </div>
                         </div>
@@ -175,7 +155,7 @@
                         <!-- Plot Dimensions & Value -->
                         <div class="review-card">
                             <div class="card-title-bar">
-                                <h3>📐 भूखण्ड माप एवं मूल्य (Plot Measurements & Value)</h3>
+                                <h3>भूखण्ड माप एवं मूल्य (Plot Measurements & Value)</h3>
                                 <span class="badge-pill" id="badge-colony-name">एमराल्ड आश्रय</span>
                             </div>
                             <div class="field-grid">
@@ -219,7 +199,7 @@
                         <!-- Boundaries Card -->
                         <div class="review-card">
                             <div class="card-title-bar">
-                                <h3>🧭 चतु:सीमा विवरण (Four Boundaries - from Excel)</h3>
+                                <h3>चतु:सीमा विवरण (Four Boundaries - from Excel)</h3>
                                 <span class="badge-pill">Hindi Translated</span>
                             </div>
                             <div class="field-grid">
@@ -247,7 +227,7 @@
                         <!-- Payments Schedule Card -->
                         <div class="review-card">
                             <div class="card-title-bar">
-                                <h3>💳 भुगतान विवरण अनुसूची (Payment Details from Excel)</h3>
+                                <h3>भुगतान विवरण अनुसूची (Payment Details from Excel)</h3>
                                 <span class="badge-pill" id="badge-payment-count">0 Payments</span>
                             </div>
                             <div class="table-container">
@@ -273,7 +253,7 @@
                     <!-- Right: Live Deed Inspector Sidebar -->
                     <aside class="live-inspector-pane">
                         <div class="inspector-header">
-                            <h4>🔍 विलेख लाइव पूर्वावलोकन (Live Deed Clauses)</h4>
+                            <h4>विलेख लाइव पूर्वावलोकन (Live Deed Clauses)</h4>
                             <span class="badge-pill">Syncing Live</span>
                         </div>
 
@@ -306,16 +286,16 @@
                 <!-- Step 3: Compilation Action -->
                 <div class="compilation-area">
                     <button type="button" id="btn-generate" class="btn-primary" style="font-size: 15px; padding: 15px 36px;">
-                        🚀 Compile & Generate Legal Deed (.docx)
+                        Compile & Generate Legal Deed (.docx)
                     </button>
 
                     <div class="download-banner" id="download-card" style="display: none;">
                         <div class="download-details">
-                            <h4>✓ विलेख सफलतापूर्वक तैयार हो गया है (Registry Deed Ready)</h4>
+                            <h4>विलेख सफलतापूर्वक तैयार हो गया है (Registry Deed Ready)</h4>
                             <p>Compiled with 100% precision from your Excel, KYC, and template files.</p>
                         </div>
                         <a id="btn-download" href="#" class="btn-download-final" download>
-                            ⬇ Download Word Deed (.docx)
+                            Download Word Deed (.docx)
                         </a>
                     </div>
                 </div>
