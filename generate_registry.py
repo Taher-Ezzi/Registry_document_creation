@@ -90,7 +90,7 @@ def get_today_hindi_date():
 def clean_plot_no(p_num):
     if not p_num:
         return ""
-    p_str = str(p_num).strip()
+    p_str = str(p_num).strip().replace('>', '').replace('<', '').replace('\u200c', '').replace('\u200d', '')
     p_clean = re.sub(r'\s*\([^)]*\)', '', p_str).strip()
     m_ews = re.match(r'^EWS[-_ ]?(\d+)$', p_clean, re.I)
     if m_ews:
@@ -100,7 +100,7 @@ def clean_plot_no(p_num):
 def plot_number_to_hindi(p_num):
     if not p_num:
         return ""
-    p_str = str(p_num).strip()
+    p_str = str(p_num).strip().replace('>', '').replace('<', '').replace('\u200c', '').replace('\u200d', '')
     p_str = re.sub(r'\s*\([^)]*\)', '', p_str).strip()
     
     e_match = re.search(r'\b(?:EWS|E)[-_ ]?(\d+)\b', p_str, re.I)
@@ -267,7 +267,10 @@ def parse_excel_registry_data(excel_path):
             colony_name = "एमराल्ड गेटवे"
             break
 
-    for r in range(1, 15):
+    width = ""
+    length = ""
+
+    for r in range(1, 20):
         c1 = str(app_sheet.cell(row=r, column=1).value or '').strip()
         c2 = app_sheet.cell(row=r, column=2).value
         
@@ -282,6 +285,18 @@ def parse_excel_registry_data(excel_path):
         elif re.search(r'Area\s*in\s*Sq\.?\s*Mtr', c1, re.I):
             if c2 is not None:
                 area_sqm = round(float(c2), 2)
+        elif re.search(r'\b(?:Width|Breath|Breadth|चौड़ाई|Chaudai)\b', c1, re.I):
+            if c2 is not None and not width:
+                try:
+                    width = round(float(c2), 2)
+                except (ValueError, TypeError):
+                    width = str(c2).strip()
+        elif re.search(r'\b(?:Length|Lamba|Lambai|लम्बाई)\b', c1, re.I):
+            if c2 is not None and not length:
+                try:
+                    length = round(float(c2), 2)
+                except (ValueError, TypeError):
+                    length = str(c2).strip()
 
     pay_sheet = None
     for name in wb.sheetnames:
@@ -293,6 +308,19 @@ def parse_excel_registry_data(excel_path):
     tds_info = None
 
     if pay_sheet:
+        # Detect Paid By / Payer / Applicant column from header row
+        paid_by_col = None
+        for r_idx, row in enumerate(pay_sheet.iter_rows(values_only=True)):
+            if r_idx > 5:
+                break
+            row_strs = [str(c or '').strip().upper() for c in row]
+            for c_idx, val in enumerate(row_strs):
+                if any(k in val for k in ('PAID BY', 'PAYER', 'APPLICANT', 'REMITTER', 'NAME', 'BUYER', 'क्रेता')):
+                    paid_by_col = c_idx
+                    break
+            if paid_by_col is not None:
+                break
+
         for r_idx, row in enumerate(pay_sheet.iter_rows(values_only=True)):
             if r_idx <= 1:
                 continue
@@ -300,17 +328,23 @@ def parse_excel_registry_data(excel_path):
             if not s_no or (not isinstance(s_no, int) and not str(s_no).isdigit()):
                 continue
             
-            dt = row[2]
-            bank_name = row[3]
-            mode_str = row[6]
-            instr_str = row[7]
-            amount = row[8]
+            dt = row[2] if len(row) > 2 else ""
+            bank_name = row[3] if len(row) > 3 else ""
+            mode_str = row[6] if len(row) > 6 else ""
+            instr_str = row[7] if len(row) > 7 else ""
+            amount = row[8] if len(row) > 8 else (row[5] if len(row) > 5 and isinstance(row[5], (int, float)) else None)
             
             if not amount:
                 continue
                 
             bank_hindi = format_bank_hindi(bank_name)
             date_hindi = format_hindi_date(dt)
+
+            paid_by = ""
+            if paid_by_col is not None and len(row) > paid_by_col:
+                paid_by = str(row[paid_by_col] or '').strip()
+            elif len(row) > 1 and isinstance(row[1], str) and not row[1].isdigit() and len(row[1].strip()) > 2:
+                paid_by = str(row[1]).strip()
             
             if mode_str and 'TDS' in str(mode_str).upper():
                 challan_no = str(instr_str).replace('CHALLAN NO-', '').replace('CHALLAN NO', '').replace('CHALLAN', '').strip()
@@ -364,6 +398,7 @@ def parse_excel_registry_data(excel_path):
                 'date_hindi': date_hindi,
                 'mode': mode_clean,
                 'ref_no': ref_no,
+                'paid_by': paid_by,
                 'is_utr': is_utr
             })
 
@@ -373,6 +408,8 @@ def parse_excel_registry_data(excel_path):
         'allotment_val': allotment_val,
         'area_sqft': area_sqft,
         'area_sqm': area_sqm,
+        'width': width,
+        'length': length,
         'payments': payments,
         'tds_info': tds_info
     }
@@ -444,7 +481,7 @@ class RegistryGenerator:
                         ('ज़िला', True),
                         ('-इन्दौर ', True),
                         ('के विभिन्न सर्वे क्रमांकों की भूमि पर विकसित कॉलोनी ', None),
-                        (f'\u200c‘{colony_name} (EMERALD AASHRAY)\u200c’ ', True),
+                        (f'‘{colony_name} (EMERALD AASHRAY)’ ', True),
                         ('में ', None),
                         ('‘आर्थिक रुप से कमज़ोर श्रेणी’', True),
                         (' [Economic Weaker Section (EWS)] हेतु आरक्षित रखे गये भूखण्डों में से, ', None),
@@ -463,13 +500,12 @@ class RegistryGenerator:
                     ]
                 else:
                     preamble_runs = [
-                        ('7', None),
                         ('ग्राम पंचायत क्षेत्र के अन्तर्गत स्थित ', None),
                         ('ग्राम-सुल्लाखेड़ी, तहसील-सांवेर, ', True),
                         ('ज़िला', True),
                         ('-इन्दौर ', True),
                         ('के विभिन्न सर्वे क्रमांकों की भूमि पर विकसित कॉलोनी ', None),
-                        (f'\u200c‘{colony_name} (EMERALD GATEWAY)\u200c’', True),
+                        (f'‘{colony_name} (EMERALD GATEWAY)’', True),
                         (' के आवासीय', None),
                         (' भूखण्ड क्रमांक ', True),
                         (f'{plot_no}', True),
@@ -581,7 +617,7 @@ class RegistryGenerator:
                 else:
                     p68_runs = [
                         ('(10) यह कि, उपरोक्त वर्णित अनुसार प्रथमपक्ष/विक्रेता को अपने स्वामित्व एवं आधिपत्य की उपरोक्त वर्णित कॉलोनी ', None),
-                        (f'\u200c‘{colony_name} (EMERALD GATEWAY)\u200c’ ', True),
+                        (f'‘{colony_name} (EMERALD GATEWAY)’ ', True),
                         ('में विकसित विभिन्न भूखण्डों के विषय में समस्त प्रकार का विक्रय व्यवहार, अन्तरण, हस्तान्तरण एवं निर्णय आदि करने का पूर्ण तथा वैधानिक अधिकार प्राप्त होने से, उन्होंने सदर कालोनी के निम्न वर्णित भूखण्ड को, जिसका स्पष्ट वर्णन एवं चतु:सीमा निम्नानुसार है, को मय विकास खर्च के, द्वितीयपक्ष/क्रेता को कुल कीमत ', None),
                         ('रुपये ', True),
                         (f'{allotment_val_formatted}/- (अक्षरी रुपये ', True),
@@ -605,10 +641,12 @@ class RegistryGenerator:
             is_utr = p_item.get('is_utr', False)
             ref_label = "UTR No. : " if is_utr else "Reference No. : "
 
+            paid_by = p_item.get('paid_by', '')
+            paid_by_text = f" ({paid_by} द्वारा) " if paid_by else " "
             p_runs = [
                 ('रुपये ', None),
                 (f'{amt_str}', None),
-                ('/- प्रथमपक्ष/विक्रेता ने उन्हों के बैंक खाते में ', None),
+                (f'/-{paid_by_text}प्रथमपक्ष/विक्रेता ने उन्हों के बैंक खाते में ', None),
                 (f'{bank_name}', True),
                 (' से ', None),
                 ('दिनांक ', True),
@@ -696,7 +734,7 @@ class RegistryGenerator:
                         ('ज़िला', True),
                         ('-इन्दौर ', True),
                         ('के विभिन्न सर्वे क्रमांकों की भूमि पर विकसित कॉलोनी ', None),
-                        (f'\u200c‘{colony_name} (EMERALD AASHRAY)\u200c’ ', True),
+                        (f'‘{colony_name} (EMERALD AASHRAY)’ ', True),
                         ('में ‘आर्थिक रुप से कमज़ोर श्रेणी\' [Economic Weaker Section (EWS)] हेतु आरक्षित रखे गये भूखण्डों में से ', None),
                         ('भूखण्ड क्रमांक ', True),
                         (f'{plot_no}', True),
@@ -725,7 +763,7 @@ class RegistryGenerator:
                         ('ज़िला', True),
                         ('-इन्दौर ', True),
                         ('के विभिन्न सर्वे क्रमांकों की भूमि पर विकसित कॉलोनी ', None),
-                        (f'\u200c‘{colony_name} (EMERALD GATEWAY)\u200c’ ', True),
+                        (f'‘{colony_name} (EMERALD GATEWAY)’ ', True),
                         ('का ', None),
                         ('भूखण्ड क्रमांक', True),
                         (f' {plot_no}', True),
